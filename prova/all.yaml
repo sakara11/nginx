@@ -11,18 +11,25 @@ spec:
   selector:
     app: nginx
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: nginx-deployment
-  labels:
-    run: nginx-deployment
 spec:
-  ports:
-  - port: 80
-    protocol: TCP
   selector:
-    app: nginx
+    matchLabels:
+      app: nginx
+  replicas: 2 # run 2 pods
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
